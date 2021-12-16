@@ -3,28 +3,49 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useState } from 'react/cjs/react.development';
 import { useAuth } from '../../hooks/AuthState';
 import api from '../../services/api';
+import { useIsFocused } from '@react-navigation/native'
 
 // import { Container } from './styles';
 
 const ListarCarros = ({navigation, route}) => {
   const {user} = useAuth()
   const [carros, setCarros] = useState([])
+  const isFocused = useIsFocused()
   useEffect(useCallback(async()=>{
     try{
       const {data} = await api.get('carros')
-      console.log(route)
-      console.log(user) 
+      console.log(data)
+      // console.log(user) 
       setCarros(data)
     }catch(e){}
-  }),[route.params?.params?.atualizar])
+  }),[isFocused])
+
+  const handleDelete = async(id) => {
+    try{
+      const {data} = await api.delete(`/carro/${id}`) 
+      const car = carros.filter((carro)=> carro.id !== id)
+      setCarros(car)
+      console.log(data)
+    }catch(e){}
+  }
   return (
   <View style={{display:'flex', height:'100%', flexDirection:'column',justifyContent:'center', alignItems:'center'}}>
     <Text>{`Lista de ${user.nome}`}</Text>
     <View>
       {
         carros[0] ? carros.map((carro)=>(
-          <View key={carro.id}>
-            <Text>{carro.modelo}</Text>
+          <View style={{display:'flex', flexDirection:'row'}}>
+          <View key={carro.id} style={{borderWidth:1, borderRadius:5, display:'flex', flexDirection:'column'}}>
+            <Text>{`Marca: ${carro.marca}`}</Text>
+            <Text>{`Modelo: ${carro.modelo}`}</Text>
+            <Text>{`Ano: ${carro.ano}`}</Text>
+          </View>
+          <TouchableOpacity 
+            style={{borderWidth:1, borderRadius:5,}}
+            onPress={()=>handleDelete(carro.id)}
+          >
+            <Text>Deletar</Text>
+          </TouchableOpacity>
           </View>
         ))
         :<Text>Não há carros</Text>

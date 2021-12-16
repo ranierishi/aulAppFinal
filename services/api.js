@@ -1,5 +1,5 @@
 import axios from 'axios'
 
-const api = axios.create({baseURL: 'http://10.0.2.2:3006/'})
+const api = axios.create({baseURL: 'https://api-carros-aula.herokuapp.com/'})
 
 export default api

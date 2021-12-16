@@ -35,6 +35,7 @@ const Login = ({navigation}) => {
         placeholder='Senha'
         secureTextEntry       
         onChangeText={(e)=> setSenha(e)}     
+        style={{width: 220, height: 40, borderWidth:1, padding: 4, marginBottom:8, borderRadius:5}}
       />
       <TouchableOpacity
         onPress={()=> handleLogin()}
